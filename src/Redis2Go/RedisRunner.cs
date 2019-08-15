@@ -1,6 +1,7 @@
 ﻿using Redis2Go.Exceptions;
 using Redis2Go.Helpers;
 using System;
+using System.Threading.Tasks;
 
 namespace Redis2Go
 {
@@ -10,15 +11,19 @@ namespace Redis2Go
         private const string BinariesSearchPatternSolution = @"Redis*\tools";
 
         private readonly IRedisProcess _redisProcess;
-        private readonly int _port;
 
         public State State { get; private set; }
-        public int Port { get { return this._port; } }
+        public int Port { get; private set; }
         public bool Disposed { get; private set; }
 
         public static RedisRunner Start()
         {
-            return new RedisRunner(PortPool.GetInstance, new RedisProcessStarter());
+            return CreateRedisRunner(PortPool.GetInstance, new RedisProcessStarter());
+        }
+
+        public static Task<RedisRunner> StartAsync(int timeoutMilliseconds = 5000)
+        {
+            return CreateRedisRunnerAsync(PortPool.GetInstance, new RedisProcessStarter(), timeoutMilliseconds);
         }
 
         public static RedisRunner StartForDebugging()
@@ -28,34 +33,49 @@ namespace Redis2Go
 
         private RedisRunner(IProcessWatcher processWatcher, IPortWatcher portWatcher, IRedisProcessStarter processStarter)
         {
-            _port = RedisDefaults.DefaultPort;
+            Port = RedisDefaults.DefaultPort;
 
-            if (processWatcher.IsProcessRunning(RedisDefaults.ProcessName) && !portWatcher.IsPortAvailable(_port))
+            if (processWatcher.IsProcessRunning(RedisDefaults.ProcessName) && !portWatcher.IsPortAvailable(Port))
             {
                 State = State.AlreadyRunning;
                 return;
             }
 
-            if (!portWatcher.IsPortAvailable(_port))
+            if (!portWatcher.IsPortAvailable(Port))
             {
-                throw new PortTakenException(String.Format("Redis can't be started. The TCP port {0} is already taken.", this._port));
+                throw new PortTakenException(String.Format("Redis can't be started. The TCP port {0} is already taken.", this.Port));
             }
 
-            _redisProcess = processStarter.Start(BinariesDirectory, this._port);
+            _redisProcess = processStarter.Start(BinariesDirectory, Port);
 
             State = State.Running;
         }
 
-        /// <summary>
-        /// usage: integration tests
-        /// </summary>
-        private RedisRunner(IPortPool portPool, IRedisProcessStarter processStarter)
+        private RedisRunner(int port, IRedisProcess redisProcess)
         {
-            _port = portPool.GetNextOpenPort();
-
-            _redisProcess = processStarter.Start(BinariesDirectory, this._port);
-
+            Port = port;
+            _redisProcess = redisProcess;
             State = State.Running;
+        }
+
+        private static RedisRunner CreateRedisRunner(IPortPool portPool, IRedisProcessStarter processStarter)
+        {
+            var port = portPool.GetNextOpenPort();
+
+            var redisProcess = processStarter.Start(BinariesDirectory, port);
+
+            return new RedisRunner(port, redisProcess);
+        }
+
+        private static async Task<RedisRunner> CreateRedisRunnerAsync(
+            IPortPool portPool, IRedisProcessStarter processStarter , int timeoutMilliseconds)
+        {
+            var port = portPool.GetNextOpenPort();
+
+            var redisProcess = await processStarter.StartAsync(BinariesDirectory, port, timeoutMilliseconds)
+                                    .ConfigureAwait(false);
+
+            return new RedisRunner(port, redisProcess);
         }
 
         private static string BinariesDirectory

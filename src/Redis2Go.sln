@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.29020.237
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Redis2Go", "Redis2Go\Redis2Go.csproj", "{3C5A9075-1AE7-47AC-9477-FEC040E1B200}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Redis2Go", "Redis2Go\Redis2Go.csproj", "{3C5A9075-1AE7-47AC-9477-FEC040E1B200}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".nuget", ".nuget", "{6186523F-ED97-4039-8C5C-793A1EE8CD18}"
 	ProjectSection(SolutionItems) = preProject
@@ -12,6 +12,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".nuget", ".nuget", "{618652
 		.nuget\NuGet.targets = .nuget\NuGet.targets
 		Redis2Go\Redis2Go.nuspec = Redis2Go\Redis2Go.nuspec
 	EndProjectSection
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Redis2Go.Tests", "Redis2Go.Tests\Redis2Go.Tests.csproj", "{21DEF888-2E20-4088-83AA-F0B54A20073B}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -23,6 +25,10 @@ Global
 		{3C5A9075-1AE7-47AC-9477-FEC040E1B200}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{3C5A9075-1AE7-47AC-9477-FEC040E1B200}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{3C5A9075-1AE7-47AC-9477-FEC040E1B200}.Release|Any CPU.Build.0 = Release|Any CPU
+		{21DEF888-2E20-4088-83AA-F0B54A20073B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{21DEF888-2E20-4088-83AA-F0B54A20073B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{21DEF888-2E20-4088-83AA-F0B54A20073B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{21DEF888-2E20-4088-83AA-F0B54A20073B}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
