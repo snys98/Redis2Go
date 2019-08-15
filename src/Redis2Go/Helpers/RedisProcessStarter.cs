@@ -9,6 +9,8 @@ namespace Redis2Go.Helpers
 {
     public class RedisProcessStarter : IRedisProcessStarter
     {
+        private readonly static object lockObject = new object();
+
         /// <summary>
         /// Starts a new process.
         /// </summary>
@@ -45,7 +47,7 @@ namespace Redis2Go.Helpers
         public Task<IRedisProcess> StartAsync(int port = RedisDefaults.DefaultPort, int timeoutMilliseconds = 5000)
         {
             var initializeWaiter = new TaskCompletionSource<IRedisProcess>().Timeout(timeoutMilliseconds);
-
+            
             var cmd = ConstructProcessCommandLine(port,true);
 
             List<string> errorOutput = new List<string>();
@@ -59,13 +61,13 @@ namespace Redis2Go.Helpers
             catch (Exception ex)
             {
                 redisServerProcess?.Kill();
-                initializeWaiter.SetException(
+                initializeWaiter.TrySetException(
                     new Exception(string.Format("Cound not start redis-server.  Error: {0}", ex.Message)));
             }
-
+            
             redisServerProcess.OutputDataReceived += (sender, eventArg) =>
             {
-                try
+                lock (lockObject)
                 {
                     if (IsInitializeSussess(eventArg))
                     {
@@ -77,18 +79,26 @@ namespace Redis2Go.Helpers
                             StandardOutput = standardOutput
                         };
 
-                        initializeWaiter.SetResult(redisProcess);
+                        initializeWaiter.TrySetResult(redisProcess);
                     }
-                }
-                catch
-                {
-                    redisServerProcess?.Kill();
                 }
             };
 
             redisServerProcess.BeginOutputReadLine();
 
-            return initializeWaiter.Task;
+            return initializeWaiter.Task.ContinueWith(t=> {
+                if(t.IsFaulted)
+                {
+                    redisServerProcess?.Kill();
+                    throw t.Exception.InnerException;
+                }
+                return t.Result;
+            });
+        }
+
+        private static bool AlreadyTimeout(TaskCompletionSource<IRedisProcess> initializeWaiter)
+        {
+            return initializeWaiter.Task.IsFaulted;
         }
 
         private static bool IsInitializeSussess(DataReceivedEventArgs eventArg)
@@ -103,6 +113,7 @@ namespace Redis2Go.Helpers
             string fileName = string.Format(@"{0}\{1}", binariesDirectory, RedisDefaults.RedisExecutable);
             string arguments = string.Format(@"--port {0}", port);
             return new ProcessStartInfo(fileName, arguments) {
+                UseShellExecute = false,
                 RedirectStandardOutput = isRedirectStandardOutput
             };
         }

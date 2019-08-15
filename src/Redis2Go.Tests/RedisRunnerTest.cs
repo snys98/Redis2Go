@@ -22,7 +22,8 @@ namespace Redis2Go.Tests
         {
             //Act
             var exception = await Assert.ThrowsAsync<TimeoutException>(
-                ()=> RedisRunner.StartAsync(1));
+                async ()=> await RedisRunner.StartAsync(1)
+                );
 
             //Assert
             Assert.NotNull(exception);

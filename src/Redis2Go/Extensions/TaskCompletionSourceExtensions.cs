@@ -10,7 +10,7 @@ namespace Redis2Go.Extensions
         {
             var cts = new CancellationTokenSource();
             cts.CancelAfter(TimeSpan.FromMilliseconds(timeoutMilliseconds));
-            cts.Token.Register(() => @this.SetException(new TimeoutException()));
+            cts.Token.Register(() => @this.TrySetException(new TimeoutException()));
 
             return @this;
             

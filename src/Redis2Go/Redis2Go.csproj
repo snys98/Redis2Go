@@ -11,6 +11,16 @@
 
   <ItemGroup>
     <Content Include="$(PkgRedis-32)\tools\*.*">
+      <Link>..\tools\Redis32\%(Filename)%(Extension)</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+    <Content Include="$(PkgRedis-64)\tools\*.*">
+      <Link>..\tools\Redis64\%(Filename)%(Extension)</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+    <Content Include="$(PkgRedis-32)\tools\*.*">
       <Link>tools\Redis32\%(Filename)%(Extension)</Link>
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
       <CopyToPublishDirectory>Always</CopyToPublishDirectory>

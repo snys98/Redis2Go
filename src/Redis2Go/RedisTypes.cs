@@ -1,4 +1,5 @@
 ﻿using System;
+using System.IO;
 
 namespace Redis2Go
 {
@@ -10,13 +11,12 @@ namespace Redis2Go
 
     public static class RedisTypesExtensions
     {
-        private static readonly string Redis64 = @"tools\Redis32\";
-        private static readonly string Redis32 = @"tools\Redis64\";
+        private static readonly string CurrentDirectory = AppDomain.CurrentDomain.BaseDirectory;
+        private static readonly string Redis64 = $@"{CurrentDirectory}\tools\Redis64\";
+        private static readonly string Redis32 = $@"{CurrentDirectory}\tools\Redis32\";
 
         public static string GetBinaryPath(this RedisTypes @this)
         {
-            var systemType = Environment.Is64BitOperatingSystem;
-
             switch (@this)
             {
                 case RedisTypes.Redis64:return Redis64;
