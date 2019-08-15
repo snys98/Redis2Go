@@ -1,6 +1,6 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <VersionPrefix>1.0.0.1</VersionPrefix>
+    <VersionPrefix>1.0.0.3</VersionPrefix>
     <TargetFrameworks>netstandard2.0;netcoreapp2.0;netcoreapp2.1;netcoreapp2.2;net45;net451;net452;net46;net461;net462;net47;net471;net472</TargetFrameworks>
     <OutputType>Library</OutputType>
     <AssemblyName>Redis2Go.Alpha</AssemblyName>
