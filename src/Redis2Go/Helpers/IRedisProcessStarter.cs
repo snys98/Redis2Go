@@ -5,7 +5,7 @@ namespace Redis2Go.Helpers
 {
     public interface IRedisProcessStarter
     {
-        IRedisProcess Start(string binariesDirectory, int port);
-        Task<IRedisProcess> StartAsync(string binariesDirectory, int port, int timeoutMilliseconds = 5000);
+        IRedisProcess Start(int port);
+        Task<IRedisProcess> StartAsync(int port, int timeoutMilliseconds = 5000);
     }
 }

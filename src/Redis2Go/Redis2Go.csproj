@@ -8,4 +8,22 @@
   <ItemGroup>
     <Folder Include="Properties\" />
   </ItemGroup>
+
+  <ItemGroup>
+    <Content Include="$(PkgRedis-32)\tools\*.*">
+      <Link>tools\Redis32\%(Filename)%(Extension)</Link>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      <CopyToPublishDirectory>Always</CopyToPublishDirectory>
+    </Content>
+  <Content Include="$(PkgRedis-64)\tools\*.*">
+      <Link>tools\Redis64\%(Filename)%(Extension)</Link>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      <CopyToPublishDirectory>Always</CopyToPublishDirectory>
+    </Content>
+  </ItemGroup>
+  
+  <ItemGroup>
+    <PackageReference Include="Redis-32" Version="2.6.12.1" GeneratePathProperty="true" />
+    <PackageReference Include="Redis-64" Version="3.0.503" GeneratePathProperty="true" />
+  </ItemGroup>
 </Project>

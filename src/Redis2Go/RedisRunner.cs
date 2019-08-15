@@ -1,15 +1,13 @@
 ﻿using Redis2Go.Exceptions;
 using Redis2Go.Helpers;
 using System;
+using System.IO;
 using System.Threading.Tasks;
 
 namespace Redis2Go
 {
     public class RedisRunner : IDisposable
     {
-        private const string BinariesSearchPattern = @"packages\Redis*\tools";
-        private const string BinariesSearchPatternSolution = @"Redis*\tools";
-
         private readonly IRedisProcess _redisProcess;
 
         public State State { get; private set; }
@@ -46,7 +44,7 @@ namespace Redis2Go
                 throw new PortTakenException(String.Format("Redis can't be started. The TCP port {0} is already taken.", this.Port));
             }
 
-            _redisProcess = processStarter.Start(BinariesDirectory, Port);
+            _redisProcess = processStarter.Start(Port);
 
             State = State.Running;
         }
@@ -62,7 +60,7 @@ namespace Redis2Go
         {
             var port = portPool.GetNextOpenPort();
 
-            var redisProcess = processStarter.Start(BinariesDirectory, port);
+            var redisProcess = processStarter.Start(port);
 
             return new RedisRunner(port, redisProcess);
         }
@@ -72,27 +70,10 @@ namespace Redis2Go
         {
             var port = portPool.GetNextOpenPort();
 
-            var redisProcess = await processStarter.StartAsync(BinariesDirectory, port, timeoutMilliseconds)
+            var redisProcess = await processStarter.StartAsync(port, timeoutMilliseconds)
                                     .ConfigureAwait(false);
 
             return new RedisRunner(port, redisProcess);
-        }
-
-        private static string BinariesDirectory
-        {
-            get
-            {
-                // 1st: path when installed via nuget
-                // 2nd: path when started from solution
-                string binariesFolder = FolderSearch.CurrentExecutingDirectory().FindFolderUpwards(BinariesSearchPattern) ??
-                                        FolderSearch.CurrentExecutingDirectory().FindFolderUpwards(BinariesSearchPatternSolution);
-
-                if (binariesFolder == null)
-                {
-                    throw new RedisBinariesNotFoundException();
-                }
-                return binariesFolder;
-            }
         }
 
         ~RedisRunner()

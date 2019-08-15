@@ -10,7 +10,7 @@ namespace Redis2Go.Tests
         public async Task ShouldRunAsync()
         {
             //Act
-            using (var actual = await RedisRunner.StartAsync(30000))
+            using (var actual = await RedisRunner.StartAsync())
             {
                 //Assert
                 Assert.Equal(State.Running, actual.State);
