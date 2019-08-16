@@ -1,6 +1,8 @@
 # Redis2Go
 # Quickly spins up Redis in .NET, for integration tests or local debugging.
 
+[![AppVoyer](https://ci.appveyor.com/api/projects/status/github/nickchan9394/redis2go?branch=master&svg=true&passingText=master%20-%20OK)](https://ci.appveyor.com/project/nickchan9394/redis2go/branch/master)
+
 Inspired by https://github.com/JohannesHoppe/Mongo2Go but for redis instead, and a lot simpler
 
 **Installation**
