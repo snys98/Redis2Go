@@ -14,6 +14,8 @@
         <copyright>Copyright © Joshscorp 2015</copyright>
     </metadata>
     <files>
-      <file src="bin\Release\**" target="lib" />
+      <file src="bin\Release\build\**\*.*" target="build" />
+      <file src="bin\Release\tools\**\*.*" target="tools" />
+      <file src="bin\Release\**\*.*" target="lib" exclude="bin\Release\**\tools\**\*.*;bin\Release\build\**\*.*;bin\Release\tools\**\*.*"/>
     </files>
 </package>

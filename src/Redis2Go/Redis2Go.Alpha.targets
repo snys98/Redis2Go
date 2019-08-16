@@ -1,0 +1,12 @@
+﻿<Project>
+  <Target Name="CopyRedis2GoTools" AfterTargets="Build">
+    <ItemGroup>
+      <MySourceFiles Include="$(MSBuildThisFileDirectory)..\..\tools\**\*.*"/>
+    </ItemGroup>
+    <Message Text="@(MySourceFiles)" />
+    <Message Text="bin\$(Configuration)\$(TargetFramework)" />
+    <Copy SourceFiles="@(MySourceFiles)"
+          DestinationFiles="bin\$(Configuration)\$(TargetFramework)\tools\%(RecursiveDir)%(Filename)%(Extension)"
+          />
+  </Target>
+</Project>
