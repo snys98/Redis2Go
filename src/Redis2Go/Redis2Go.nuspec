@@ -2,7 +2,7 @@
 <package xmlns="http://schemas.microsoft.com/packaging/2011/08/nuspec.xsd">
     <metadata>
         <id>Redis2Go.Alpha</id>
-        <version>1.0.0.3-preview</version>
+        <version>1.0.0.3</version>
         <title>Redis2Go.Alpha</title>
         <authors>Josh Sim, Nick Chan</authors>
         <owners>Josh Sim</owners>
