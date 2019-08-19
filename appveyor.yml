@@ -5,8 +5,6 @@ before_build:
   - cmd: dotnet restore ./src/
 build_script:
   - cmd: dotnet build -c Release ./src/
-after_build:
-  - cmd: dotnet pack -c Release --no-build ./src/ -p:NuspecFile=Redis2Go.nuspec
 artifacts:
   - path: '\src\Redis2Go\bin\Release\*.nupkg'
     name: drop
@@ -14,11 +12,6 @@ artifacts:
 clone_depth: 1
 test_script:
   - cmd: dotnet test -c Release --no-build ./src/
-deploy:
-- provider: NuGet
-  name: production
-  api_key:
-    secure: 1zciV0BMoo9LscAiQzNEHKsZ5H5liuN1eSO2Mc3nF9mgcgzRN74pYMkvpu6JyquI
 
 for:
 
@@ -27,7 +20,7 @@ for:
     only:
       - master
   after_build:
-    - cmd: dotnet pack -c Release --no-build ./src/ -p:NuspecFile=Redis2Go.nuspec
+    - cmd: dotnet pack -c Release --no-build ./src/
   deploy:
   - provider: NuGet
     name: production
@@ -36,3 +29,15 @@ for:
     on:
       branch: master
       appveyor_repo_tag: true
+
+-
+  branches:
+    except:
+      - master
+  after_build:
+    - cmd: dotnet pack -c Release --no-build ./src/ --version-suffix preview-%APPVEYOR_BUILD_NUMBER%
+  deploy:
+  - provider: NuGet
+    name: production
+    api_key:
+      secure: 1zciV0BMoo9LscAiQzNEHKsZ5H5liuN1eSO2Mc3nF9mgcgzRN74pYMkvpu6JyquI
