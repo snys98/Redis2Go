@@ -1,19 +1,27 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <VersionPrefix>1.0.0.3</VersionPrefix>
+    <VersionSuffix>$(VersionSuffix)</VersionSuffix>
     <TargetFrameworks>netstandard2.0;netcoreapp2.0;netcoreapp2.1;netcoreapp2.2;net45;net451;net452;net46;net461;net462;net47;net471;net472</TargetFrameworks>
     <OutputType>Library</OutputType>
     <AssemblyName>Redis2Go.Alpha</AssemblyName>
+    <Authors>Josh Sim, Nick Chan</Authors>
+    <Description>Easily spin up Redis instances for integration tests</Description>
+    <Copyright>Copyright © Joshscorp 2015</Copyright>
+    <PackageLicenseExpression>Apache-2.0</PackageLicenseExpression>
+    <PackageProjectUrl>https://github.com/nickchan9394/Redis2Go</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/nickchan9394/Redis2Go</RepositoryUrl>
+    <IncludeContentInPack>false</IncludeContentInPack>
+    <TargetsForTfmSpecificContentInPackage>$(TargetsForTfmSpecificContentInPackage);CopyPackageContentFiles</TargetsForTfmSpecificContentInPackage>
   </PropertyGroup>
-  <ItemGroup>
-    <Folder Include="Properties\" />
-  </ItemGroup>
 
   <ItemGroup>
     <Content Include="$(PkgRedis-32)\tools\*.*">
       <Link>..\tools\Redis32\%(Filename)%(Extension)</Link>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
       <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+      <Pack>true</Pack>
+      <PackagePath>tools</PackagePath>
     </Content>
     <Content Include="$(PkgRedis-64)\tools\*.*">
       <Link>..\tools\Redis64\%(Filename)%(Extension)</Link>
@@ -30,11 +38,6 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
       <CopyToPublishDirectory>Always</CopyToPublishDirectory>
     </Content>
-    <Content Include="*.targets">
-      <Link>..\build\$(targetFramework)\%(Filename)%(Extension)</Link>
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-      <CopyToPublishDirectory>Always</CopyToPublishDirectory>
-    </Content>
   </ItemGroup>
   
   <ItemGroup>
@@ -47,4 +50,16 @@
       <CopyToOutputDirectory>Never</CopyToOutputDirectory>
     </None>
   </ItemGroup>
+
+  <Target Name="CopyPackageContentFiles">
+    <ItemGroup>
+      <TfmSpecificPackageFile Include="Redis2Go.Alpha.targets">
+        <PackagePath>build/$(TargetFramework)</PackagePath>
+      </TfmSpecificPackageFile>
+      <TfmSpecificPackageFile Include="$(OutputPath)tools\**\*">
+        <PackagePath>tools</PackagePath>
+      </TfmSpecificPackageFile>
+    </ItemGroup>
+  </Target>
+  
 </Project>
