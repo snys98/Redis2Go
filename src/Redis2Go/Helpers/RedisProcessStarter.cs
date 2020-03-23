@@ -9,7 +9,7 @@ namespace Redis2Go.Helpers
 {
     public class RedisProcessStarter : IRedisProcessStarter
     {
-        private readonly static object lockObject = new object();
+        private readonly object lockObject = new object();
 
         /// <summary>
         /// Starts a new process.
@@ -56,41 +56,52 @@ namespace Redis2Go.Helpers
             Process redisServerProcess = null;
             try
             {
-                redisServerProcess = Process.Start(cmd);
+                redisServerProcess = new Process() {
+                    StartInfo = cmd
+                };
+
+                redisServerProcess.OutputDataReceived += (sender, eventArg) =>
+                {
+                    lock (lockObject)
+                    {
+                        if (IsInitializeSussess(eventArg))
+                        {
+                            standardOutput.Add("redis-server started on successfully");
+
+                            initializeWaiter.TrySetResult(
+                                new RedisProcess(redisServerProcess)
+                            {
+                                ErrorOutput = errorOutput,
+                                StandardOutput = standardOutput
+                            });
+                        }
+                    }
+                };
+
+                redisServerProcess.Start();
+                redisServerProcess.BeginOutputReadLine();
+
                 Task.Run(()=>redisServerProcess.WaitForExit());
             }
             catch (Exception ex)
             {
-                redisServerProcess?.Kill();
+                try
+                {
+                    redisServerProcess?.Kill();
+                }
+                catch { }
                 initializeWaiter.TrySetException(
                     new Exception(string.Format("Cound not start redis-server.  Error: {0}", ex.Message)));
             }
-            
-            redisServerProcess.OutputDataReceived += (sender, eventArg) =>
-            {
-                lock (lockObject)
-                {
-                    if (IsInitializeSussess(eventArg))
-                    {
-                        standardOutput.Add("redis-server started on successfully");
-
-                        RedisProcess redisProcess = new RedisProcess(redisServerProcess)
-                        {
-                            ErrorOutput = errorOutput,
-                            StandardOutput = standardOutput
-                        };
-
-                        initializeWaiter.TrySetResult(redisProcess);
-                    }
-                }
-            };
-
-            redisServerProcess.BeginOutputReadLine();
 
             return initializeWaiter.Task.ContinueWith(t=> {
                 if(t.IsFaulted)
                 {
-                    redisServerProcess?.Kill();
+                    try
+                    {
+                        redisServerProcess?.Kill();
+                    }
+                    catch { }
                     throw t.Exception.InnerException;
                 }
                 return t.Result;
