@@ -57,6 +57,7 @@ namespace Redis2Go.Helpers
             try
             {
                 redisServerProcess = Process.Start(cmd);
+                Task.Run(()=>redisServerProcess.WaitForExit());
             }
             catch (Exception ex)
             {
