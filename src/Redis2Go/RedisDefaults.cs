@@ -3,9 +3,9 @@ namespace Redis2Go
 {
     public static class RedisDefaults
     {
-        public const string ProcessName = "memurai-cli";
+        public const string ProcessName = "memurai.exe";
 
-        public const string RedisExecutable = "memurai-cli";
+        public const string RedisExecutable = "memurai.exe";
 
         public const int DefaultPort = 6379;
 

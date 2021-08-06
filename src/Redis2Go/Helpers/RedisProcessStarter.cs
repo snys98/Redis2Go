@@ -25,11 +25,11 @@ namespace Redis2Go.Helpers
             try
             {
                 redisServerProcess = Process.Start(cmd);
-                standardOutput.Add("redis-server started on successfully");
+                standardOutput.Add("memurai started on successfully");
             }
             catch (Exception ex)
             {
-                errorOutput.Add(string.Format("Cound not start redis-server.  Error: {0}", ex.Message));
+                errorOutput.Add(string.Format("Cound not start memurai.  Error: {0}", ex.Message));
             }
 
             RedisProcess redisProcess = new RedisProcess(redisServerProcess)
@@ -62,7 +62,7 @@ namespace Redis2Go.Helpers
             {
                 redisServerProcess?.Kill();
                 initializeWaiter.TrySetException(
-                    new Exception(string.Format("Cound not start redis-server.  Error: {0}", ex.Message)));
+                    new Exception(string.Format("Cound not start memurai.  Error: {0}", ex.Message)));
             }
             
             redisServerProcess.OutputDataReceived += (sender, eventArg) =>
@@ -71,7 +71,7 @@ namespace Redis2Go.Helpers
                 {
                     if (IsInitializeSussess(eventArg))
                     {
-                        standardOutput.Add("redis-server started on successfully");
+                        standardOutput.Add("memurai started on successfully");
 
                         RedisProcess redisProcess = new RedisProcess(redisServerProcess)
                         {
@@ -104,7 +104,7 @@ namespace Redis2Go.Helpers
         private static bool IsInitializeSussess(DataReceivedEventArgs eventArg)
         {
             return !string.IsNullOrEmpty(eventArg.Data)
-                   && eventArg.Data.Contains("The server is now ready to accept connections");
+                   && eventArg.Data.Contains("Ready to accept connections");
         }
 
         private static ProcessStartInfo ConstructProcessCommandLine(int port,bool isRedirectStandardOutput = false)

@@ -25,8 +25,8 @@
     </Content>
     <Content Include="$(PkgMemuraiDeveloper)\tools\*.*">
       <Link>tools\MemuraiDeveloper\%(Filename)%(Extension)</Link>
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-      <CopyToPublishDirectory>Always</CopyToPublishDirectory>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
     </Content>
   </ItemGroup>
 
