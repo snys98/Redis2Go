@@ -13,6 +13,7 @@
     <RepositoryUrl>https://github.com/snys98/Redis2Go</RepositoryUrl>
     <IncludeContentInPack>false</IncludeContentInPack>
     <TargetsForTfmSpecificContentInPackage>$(TargetsForTfmSpecificContentInPackage);CopyPackageContentFiles</TargetsForTfmSpecificContentInPackage>
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
   </PropertyGroup>
 
   <ItemGroup>
