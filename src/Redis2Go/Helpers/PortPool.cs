@@ -7,7 +7,7 @@ namespace Redis2Go.Helpers
         private readonly Object _lock = new Object();
         private static readonly PortPool Instance = new PortPool();
 
-        private int _startPort = RedisDefaults.AlternateDefaultPort;
+        private int _startPort = RedisDefaults.DefaultPort;
 
         // Explicit static constructor to tell C# compiler
         // not to mark type as beforefieldinit
